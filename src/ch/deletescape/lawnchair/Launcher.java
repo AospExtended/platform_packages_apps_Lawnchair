@@ -78,8 +78,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.libraries.launcherclient.LauncherClient;
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -131,8 +129,6 @@ public class Launcher extends Activity
         LauncherModel.Callbacks, View.OnTouchListener, LauncherProviderChangeListener,
         AccessibilityManager.AccessibilityStateChangeListener {
     public static final String TAG = "Launcher";
-
-    private FirebaseAnalytics mFirebaseAnalytics;
 
     private static final int REQUEST_CREATE_SHORTCUT = 1;
     private static final int REQUEST_CREATE_APPWIDGET = 5;
@@ -336,7 +332,6 @@ public class Launcher extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         LauncherAppState app = LauncherAppState.getInstance();
         app.setMLauncher(this);
@@ -1190,7 +1185,6 @@ public class Launcher extends Activity
 
         mWorkspace.addInScreen(view, container, screenId, cellXY[0], cellXY[1], 1, 1,
                 isWorkspaceLocked());
-        mFirebaseAnalytics.logEvent("add_shortcut", null);
     }
 
     /**
@@ -1223,7 +1217,6 @@ public class Launcher extends Activity
         }
         hostView.setVisibility(View.VISIBLE);
         addAppWidgetToWorkspace(hostView, launcherInfo, appWidgetInfo, isWorkspaceLocked());
-        mFirebaseAnalytics.logEvent("add_appwidget", null);
     }
 
     private void addAppWidgetToWorkspace(
@@ -1662,7 +1655,6 @@ public class Launcher extends Activity
 
         // We need to show the workspace after starting the search
         showWorkspace(true);
-        mFirebaseAnalytics.logEvent("start_search", null);
     }
 
     /**
@@ -1702,7 +1694,6 @@ public class Launcher extends Activity
             startActivity(intent);
         } catch (ActivityNotFoundException ex) {
             Log.e(TAG, "Global search activity not found: " + globalSearchActivity);
-            FirebaseCrash.report(ex);
         }
     }
 
@@ -1846,7 +1837,6 @@ public class Launcher extends Activity
         // Force measure the new folder icon
         CellLayout parent = mWorkspace.getParentCellLayoutForView(newFolder);
         parent.getShortcutsAndWidgets().measureChild(newFolder);
-        mFirebaseAnalytics.logEvent("add_folder", null);
         return newFolder;
     }
 
@@ -2073,14 +2063,12 @@ public class Launcher extends Activity
     }
 
     protected void onClickAllAppsHandle() {
-        mFirebaseAnalytics.logEvent("click_allappshandle", null);
         if (!isAppsViewVisible()) {
             showAppsView(true /* animated */, false /* focusSearchBar */);
         }
     }
 
     protected void onLongClickAllAppsHandle() {
-        mFirebaseAnalytics.logEvent("longclick_allappshandle", null);
         if (!isAppsViewVisible()) {
             showAppsView(true /* animated */, true /* focusSearchBar */);
         }
@@ -2109,7 +2097,6 @@ public class Launcher extends Activity
      * @param v The view that was clicked. Must be a tagged with a {@link ShortcutInfo}.
      */
     protected void onClickAppShortcut(final View v) {
-        mFirebaseAnalytics.logEvent("click_appshortcut", null);
         Object tag = v.getTag();
         if (!(tag instanceof ShortcutInfo)) {
             throw new IllegalArgumentException("Input must be a Shortcut");
@@ -2182,7 +2169,6 @@ public class Launcher extends Activity
      * @param v The view that was clicked. Must be an instance of {@link FolderIcon}.
      */
     protected void onClickFolderIcon(View v) {
-        mFirebaseAnalytics.logEvent("click_foldericon", null);
         if (!(v instanceof FolderIcon)) {
             throw new IllegalArgumentException("Input must be a FolderIcon");
         }
@@ -2199,7 +2185,6 @@ public class Launcher extends Activity
      * on the home screen.
      */
     public void onClickAddWidgetButton() {
-        mFirebaseAnalytics.logEvent("click_addwidgetbutton", null);
         if (mIsSafeModeEnabled) {
             Toast.makeText(this, R.string.safemode_widget_error, Toast.LENGTH_SHORT).show();
         } else {
@@ -2212,7 +2197,6 @@ public class Launcher extends Activity
      * on the home screen.
      */
     public void onClickWallpaperPicker(View v) {
-        mFirebaseAnalytics.logEvent("click_wallpaperpickerbutton", null);
         if (!Utilities.isWallapaperAllowed(this)) {
             Toast.makeText(this, R.string.msg_disabled_by_admin, Toast.LENGTH_SHORT).show();
             return;
@@ -2263,7 +2247,6 @@ public class Launcher extends Activity
 
     @SuppressLint("NewApi")
     private void startShortcutIntentSafely(Intent intent, Bundle optsBundle, ItemInfo info) {
-        mFirebaseAnalytics.logEvent("start_shortcutintent_savely", null);
         try {
             StrictMode.VmPolicy oldPolicy = StrictMode.getVmPolicy();
             try {
@@ -2338,7 +2321,6 @@ public class Launcher extends Activity
     }
 
     public boolean startActivitySafely(View v, Intent intent, ItemInfo item) {
-        mFirebaseAnalytics.logEvent("start_activity_savely", null);
         if (mIsSafeModeEnabled && !Utilities.isSystemApp(this, intent)) {
             Toast.makeText(this, R.string.safemode_shortcut_error, Toast.LENGTH_SHORT).show();
             return false;
@@ -2378,7 +2360,6 @@ public class Launcher extends Activity
         } catch (ActivityNotFoundException | SecurityException e) {
             Toast.makeText(this, R.string.activity_not_found, Toast.LENGTH_SHORT).show();
             Log.e(TAG, "Unable to launch. tag=" + item + " intent=" + intent, e);
-            FirebaseCrash.report(e);
         }
         return false;
     }
@@ -2493,7 +2474,7 @@ public class Launcher extends Activity
      * @param folderIcon The FolderIcon describing the folder to open.
      */
     public void openFolder(FolderIcon folderIcon) {
-        mFirebaseAnalytics.logEvent("open_folder", null);
+
         Folder folder = folderIcon.getFolder();
         Folder openFolder = mWorkspace != null ? mWorkspace.getOpenFolder() : null;
         if (openFolder != null && openFolder != folder) {
@@ -2563,7 +2544,6 @@ public class Launcher extends Activity
         // Notify the accessibility manager that this folder "window" has disappeared and no
         // longer occludes the workspace items
         getDragLayer().sendAccessibilityEvent(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
-        mFirebaseAnalytics.logEvent("close_folder", null);
     }
 
     public void closeShortcutsContainer() {
@@ -2579,7 +2559,6 @@ public class Launcher extends Activity
                 deepShortcutsContainer.close();
             }
         }
-        mFirebaseAnalytics.logEvent("close_shortcutscontainer", null);
     }
 
     public View getTopFloatingView() {
@@ -2719,7 +2698,6 @@ public class Launcher extends Activity
             // This clears all widget bitmaps from the widget tray
             // TODO(hyunyoungs)
         }
-        mFirebaseAnalytics.logEvent("trim_memory", null);
     }
 
     public boolean showWorkspace(boolean animated) {
@@ -2727,7 +2705,6 @@ public class Launcher extends Activity
     }
 
     public boolean showWorkspace(boolean animated, Runnable onCompleteRunnable) {
-        mFirebaseAnalytics.logEvent("show_workspace", null);
         boolean changed = mState != State.WORKSPACE ||
                 mWorkspace.getState() != Workspace.State.NORMAL;
         if (changed || mAllAppsController.isTransitioning()) {
@@ -2769,7 +2746,6 @@ public class Launcher extends Activity
      * onto one of the overview panel buttons.
      */
     void showOverviewMode(boolean animated, boolean requestButtonFocus) {
-        mFirebaseAnalytics.logEvent("show_overviewmode", null);
         Runnable postAnimRunnable = null;
         if (requestButtonFocus) {
             postAnimRunnable = new Runnable() {
@@ -2796,7 +2772,6 @@ public class Launcher extends Activity
      */
     public void showAppsView(boolean animated,
                              boolean focusSearchBar) {
-        mFirebaseAnalytics.logEvent("show_appsview", null);
         markAppsViewShown();
         showAppsOrWidgets(State.APPS, animated, focusSearchBar);
     }
@@ -2805,7 +2780,6 @@ public class Launcher extends Activity
      * Shows the widgets view.
      */
     void showWidgetsView(boolean animated, boolean resetPageToZero) {
-        mFirebaseAnalytics.logEvent("show_widgetsview", null);
         if (resetPageToZero) {
             mWidgetsView.scrollToTop();
         }

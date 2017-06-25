@@ -22,8 +22,6 @@ import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.google.firebase.crash.FirebaseCrash;
-
 import ch.deletescape.lawnchair.Launcher;
 
 public class LauncherClient {
@@ -105,7 +103,7 @@ public class LauncherClient {
                 mOverlay.onResume();
             }
         } catch (RemoteException ignored) {
-            FirebaseCrash.report(ignored);
+
         }
     }
 
@@ -114,7 +112,6 @@ public class LauncherClient {
             return context.bindService(mServiceIntent, conn, flags | Context.BIND_AUTO_CREATE);
         } catch (SecurityException e) {
             Log.e("DrawerOverlayClient", "Unable to connect to overlay service");
-            FirebaseCrash.report(e);
             return false;
         }
     }
@@ -178,7 +175,7 @@ public class LauncherClient {
             try {
                 mOverlay.windowDetached(mLauncher.isChangingConfigurations());
             } catch (RemoteException ignored) {
-                FirebaseCrash.report(ignored);
+
             }
             mOverlay = null;
         }
@@ -192,7 +189,7 @@ public class LauncherClient {
         try {
             mOverlay.endScroll();
         } catch (RemoteException ignored) {
-            FirebaseCrash.report(ignored);
+
         }
     }
 
@@ -204,7 +201,7 @@ public class LauncherClient {
         try {
             mOverlay.closeOverlay(animate ? 1 : 0);
         } catch (RemoteException ignored) {
-            FirebaseCrash.report(ignored);
+
         }
     }
 
@@ -216,7 +213,7 @@ public class LauncherClient {
         try {
             mOverlay.openOverlay(animate ? 1 : 0);
         } catch (RemoteException ignored) {
-            FirebaseCrash.report(ignored);
+
         }
     }
 
@@ -243,7 +240,7 @@ public class LauncherClient {
                 try {
                     mOverlay.setActivityState(activityState);
                 } catch (RemoteException e) {
-                    FirebaseCrash.report(e);
+
                 }
             }
         }
@@ -256,7 +253,6 @@ public class LauncherClient {
                 try {
                     mOverlay.setActivityState(activityState);
                 } catch (RemoteException e) {
-                    FirebaseCrash.report(e);
                 }
             }
         }
@@ -271,7 +267,7 @@ public class LauncherClient {
             try {
                 mOverlay.onPause();
             } catch (RemoteException ignored) {
-                FirebaseCrash.report(ignored);
+
             }
         }
     }
@@ -287,7 +283,7 @@ public class LauncherClient {
             try {
                 mOverlay.onResume();
             } catch (RemoteException ignored) {
-                FirebaseCrash.report(ignored);
+
             }
         }
     }
@@ -337,7 +333,7 @@ public class LauncherClient {
         try {
             mOverlay.startScroll();
         } catch (RemoteException ignored) {
-            FirebaseCrash.report(ignored);
+
         }
     }
 
@@ -349,7 +345,7 @@ public class LauncherClient {
         try {
             mOverlay.onScroll(progressX);
         } catch (RemoteException ignored) {
-            FirebaseCrash.report(ignored);
+
         }
     }
 

@@ -7,9 +7,6 @@ import android.content.res.Resources;
 import android.util.ArrayMap;
 import android.widget.Toast;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
-
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.File;
@@ -26,7 +23,6 @@ public class IconPackProvider {
     public static IconPack loadAndGetIconPack(Context context) {
         SharedPreferences prefs = Utilities.getPrefs(context);
         String packageName = prefs.getString("pref_iconPackPackage", "");
-        FirebaseAnalytics.getInstance(context).setUserProperty("iconpack", packageName);
         if ("".equals(packageName)) {
             return null;
         }
@@ -45,13 +41,11 @@ public class IconPackProvider {
         try {
             appFilter = parseAppFilter(getAppFilter(context, packageName));
         } catch (Exception e) {
-            FirebaseCrash.report(e);
             Toast.makeText(context, "Invalid IconPack", Toast.LENGTH_SHORT).show();
             iconPacks.put(packageName, null);
             return;
         }
         iconPacks.put(packageName, new IconPack(appFilter, context, packageName));
-        FirebaseAnalytics.getInstance(context).logEvent("iconpack_loaded", null);
     }
 
     private static void clearCache(Context context, String packageName) {
@@ -68,10 +62,9 @@ public class IconPackProvider {
             try {
                 indicatorFile.createNewFile();
             } catch (IOException e) {
-                FirebaseCrash.report(e);
+                e.printStackTrace();
             }
         }
-        FirebaseAnalytics.getInstance(context).logEvent("iconpack_clearcache", null);
     }
 
     private static Map<String, String> parseAppFilter(XmlPullParser parser) throws Exception {
@@ -101,7 +94,6 @@ public class IconPackProvider {
                 return context.getPackageManager().getXml(packageName, resourceId, null);
             }
         } catch (PackageManager.NameNotFoundException e) {
-            FirebaseCrash.report(e);
             Toast.makeText(context, "Failed to get AppFilter", Toast.LENGTH_SHORT).show();
         }
         return null;

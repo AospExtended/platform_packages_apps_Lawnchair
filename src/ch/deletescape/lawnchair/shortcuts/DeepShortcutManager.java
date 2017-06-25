@@ -29,8 +29,6 @@ import android.os.Bundle;
 import android.os.UserHandle;
 import android.util.Log;
 
-import com.google.firebase.crash.FirebaseCrash;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -140,7 +138,6 @@ public class DeepShortcutManager {
                 mWasLastCallSuccess = true;
             } catch (SecurityException | IllegalStateException e) {
                 Log.e(TAG, "Failed to start shortcut", e);
-                FirebaseCrash.report(e);
                 mWasLastCallSuccess = false;
             }
         }
@@ -155,7 +152,6 @@ public class DeepShortcutManager {
                 return icon;
             } catch (SecurityException | IllegalStateException e) {
                 Log.e(TAG, "Failed to get shortcut icon", e);
-                FirebaseCrash.report(e);
                 mWasLastCallSuccess = false;
             }
         } else {
@@ -212,7 +208,6 @@ public class DeepShortcutManager {
                 mWasLastCallSuccess = true;
             } catch (SecurityException | IllegalStateException e) {
                 Log.e(TAG, "Failed to query for shortcuts", e);
-                FirebaseCrash.report(e);
                 mWasLastCallSuccess = false;
             }
             if (shortcutInfos == null) {
@@ -234,7 +229,6 @@ public class DeepShortcutManager {
                 return mLauncherApps.hasShortcutHostPermission();
             } catch (SecurityException | IllegalStateException e) {
                 Log.e(TAG, "Failed to make shortcut manager call", e);
-                FirebaseCrash.report(e);
             }
         }
         return true;

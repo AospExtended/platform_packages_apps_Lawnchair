@@ -46,8 +46,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -196,8 +194,6 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
     @Thunk
     int mCurrentScrollDir = DragController.SCROLL_NONE;
 
-    private FirebaseAnalytics mFirebaseAnalytics;
-
     /**
      * Used to inflate the Workspace from XML.
      *
@@ -206,7 +202,6 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
      */
     public Folder(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         setAlwaysDrawnWithCacheEnabled(false);
         mInputMethodManager = (InputMethodManager)
                 getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -374,7 +369,6 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
     }
 
     public void startEditingFolderName() {
-        mFirebaseAnalytics.logEvent("folder_start_editname", null);
         post(new Runnable() {
             @Override
             public void run() {
@@ -385,7 +379,6 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
     }
 
     public void dismissEditingName() {
-        mFirebaseAnalytics.logEvent("folder_stop_editname", null);
         mInputMethodManager.hideSoftInputFromWindow(getWindowToken(), 0);
         doneEditingFolderName(true);
     }

@@ -24,8 +24,6 @@ import android.graphics.Color;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v7.graphics.Palette;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-
 import java.util.List;
 
 import ch.deletescape.lawnchair.Utilities;
@@ -62,7 +60,6 @@ public class ExtractionUtils {
      */
     public static void startColorExtractionService(Context context) {
         context.startService(new Intent(context, ColorExtractionService.class));
-        FirebaseAnalytics.getInstance(context).logEvent("start_colorextractionservice", null);
     }
 
     private static boolean hasWallpaperIdChanged(Context context) {
